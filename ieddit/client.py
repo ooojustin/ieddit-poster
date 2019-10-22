@@ -70,6 +70,10 @@ class Client:
         pattern = r"\/i\/{}\/(\d+)\/".format(sub)
         match = re.search(pattern, post_url)
 
+        # retry if the captcha failed
+        if response.text.contains("invalid captcha"):
+            return self.create_post(title, sub, url, text, nsfw)
+
         assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
         post_id = int(match.group(1))
 
