@@ -39,8 +39,8 @@ def init():
             CREATE TABLE "posts" (
                 "id"	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                 "title"         TEXT,
-                "ieddit_id"	INTEGER UNIQUE,
-                "reddit_id"	TEXT UNIQUE,
+                "ieddit_id"	    INTEGER UNIQUE,
+                "reddit_id"	    TEXT,
                 "ieddit_url"	TEXT,
                 "reddit_url"	TEXT,
                 "subieddit"	    TEXT,
