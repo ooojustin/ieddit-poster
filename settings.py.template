@@ -1,2 +1,4 @@
 USERNAME = ""
 PASSWORD = ""
+
+_2CAPTCHA_API_KEY = ""
