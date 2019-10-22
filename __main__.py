@@ -40,10 +40,11 @@ while True:
                         "title": submission.title + " [r-poster]",
                         "sub": subieddit,
                         "url": submission.url,
-                        "nsfw": submission.over_18
+                        "nsfw": True # submission.over_18
                     }
                     post_id, post_url = ieddit.create_post(**post)
-                except:
+                except Exception as e:
+                    print(e)
                     continue
 
                 # store in database

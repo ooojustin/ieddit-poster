@@ -71,7 +71,7 @@ class Client:
         match = re.search(pattern, post_url)
 
         # retry if the captcha failed
-        if response.text.contains("invalid captcha"):
+        if "invalid captcha" in response.text:
             return self.create_post(title, sub, url, text, nsfw)
 
         assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
