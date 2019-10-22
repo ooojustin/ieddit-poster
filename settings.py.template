@@ -1,4 +1,14 @@
-USERNAME = ""
-PASSWORD = ""
+IEDDIT = {
+    "USERNAME": "",
+    "PASSWORD": ""
+}
+
+REDDIT = {
+    "USERNAME": "",
+    "PASSWORD": "",
+    "CLIENT_ID": "",
+    "CLIENT_SECRET": "",
+    "USER_AGENT": ""
+}
 
 _2CAPTCHA_API_KEY = ""
