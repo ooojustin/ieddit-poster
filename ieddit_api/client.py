@@ -1,6 +1,7 @@
-import requests
-from urllib.parse import urljoin
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin, quote_plus
 from ._2captcha import _2Captcha
+import re, requests
 
 class Client:
 
@@ -30,12 +31,40 @@ class Client:
             "username": self.username,
             "password": self.password
         }
-    
-        response = self.session.post(Client.IEDDIT("login"), params)
+
+        response = self.session.get(Client.IEDDIT("/login/"))
+        response = self.session.post(Client.IEDDIT("/login/"), params)
         cookies = self.session.cookies.get_dict()
 
         assert response.status_code == 200, "ieddit returned unexpected status code [{}]".format(response.status_code)
-        assert "session" in cookies.keys(), "ieddit response missing session cookie"
+        assert not response.url.endswith("/login/"), "login failed :(\n" + response.text
         self.logged_in = True
 
-    
+    @_require_login
+    def create_post(self, title, sub, url = "", text = ""):
+
+        # send get request and create html parser
+        response = self.session.get(Client.IEDDIT("/create_post"))
+        parser = BeautifulSoup(response.text, "html.parser")
+
+        # find base64 captcha data and solve
+        img = parser.select_one(".captcha-div img")
+        base64 = img["src"].split()[1]       
+        answer = self._2captcha.solve(base64)
+        assert answer, "failed to solve captcha :("
+
+        params = {
+            "url": url,
+            "self_post_text": text,
+            "title": title,
+            "sub": sub,
+            "captcha": answer
+        }
+
+        response = self.session.post(Client.IEDDIT("/create_post"), params)
+        pattern = r"\/i\/{}\/(\d+)\/".format(sub)
+        match = re.search(pattern, response.url)
+        assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
+        post_id = int(match.groups(1))
+        
+        return post_id

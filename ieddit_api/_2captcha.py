@@ -1,6 +1,4 @@
-import requests
-import json
-import time
+import requests, json, time
 
 class _2Captcha:
 
