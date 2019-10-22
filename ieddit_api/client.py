@@ -22,7 +22,7 @@ class Client:
     def _require_login(func):
         def wrapper(self, *args, **kwargs):
             assert self.logged_in, func.__name__ + " requires client to be authenticated."
-            func(self, *args, **kwargs)
+            return func(self, *args, **kwargs)
         return wrapper
 
     def login(self):
@@ -62,12 +62,16 @@ class Client:
         }
 
         response = self.session.post(Client.IEDDIT("/create_post"), params)
-        pattern = r"\/i\/{}\/(\d+)\/".format(sub)
-        match = re.search(pattern, response.url)
-        assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
-        post_id = int(match.groups(1))
-        
-        if nsfw:
-            self.session.post(Client.IEDDIT("/nsfw"), { "post_id": post_id })
+        post_url = response.url
 
-        return post_id
+        pattern = r"\/i\/{}\/(\d+)\/".format(sub)
+        match = re.search(pattern, post_url)
+
+        assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
+        post_id = int(match.group(1))
+
+        if nsfw:
+            params = { "post_id": post_id }
+            self.session.post(Client.IEDDIT("/user/nsfw"), params)
+            
+        return post_url
