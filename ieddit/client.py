@@ -24,7 +24,8 @@ class Client:
 
     def _require_login(func):
         def wrapper(self, *args, **kwargs):
-            assert self.logged_in, func.__name__ + " requires client to be authenticated."
+            if not self.logged_in:
+                raise Exception(func.__name__ + " requires client to be authenticated.")
             return func(self, *args, **kwargs)
         return wrapper
 
@@ -39,8 +40,12 @@ class Client:
         response = self.session.post(Client.IEDDIT("/login/"), params)
         cookies = self.session.cookies.get_dict()
 
-        assert response.status_code == 200, "ieddit returned unexpected status code [{}]".format(response.status_code)
-        assert not response.url.endswith("/login/"), "login failed :(\n" + response.text
+        if response.status_code != 200:
+            raise Exception("ieddit returned unexpected status code [{}]".format(response.status_code))
+
+        if response.url.endswith("/login/"):
+            raise Exception("login failed :(\n" + response.text)
+
         self.logged_in = True
 
     @_require_login
@@ -54,7 +59,8 @@ class Client:
         img = parser.select_one(".captcha-div img")
         base64 = img["src"].split()[1]       
         answer = self._2captcha.solve(base64)
-        assert answer, "failed to solve captcha :("
+        if not answer:
+            raise Exception("failed to solve captcha :(")
 
         params = {
             "url": url,
@@ -74,7 +80,8 @@ class Client:
         if "invalid captcha" in response.text:
             return self.create_post(title, sub, url, text, nsfw)
 
-        assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
+        if not match:
+            raise Exception("failed to create post: [{}]".format(response.status_code))
         post_id = int(match.group(1))
 
         if nsfw:

@@ -17,7 +17,10 @@ def _create_insert_query(table, columns):
 def add_post(data):
     columns = ["title", "ieddit_id", "reddit_id", "ieddit_url", "reddit_url", "subieddit", "subreddit", "image_url", "timestamp"]
     query = _create_insert_query("posts", columns)
-    assert len(data) == len(columns), "number of columns and number of provided values does not match up."
+
+    if len(data) != len(columns):
+        raise Exception("number of columns and number of provided values does not match up.")
+    
     cursor.execute(query, data)
 
 def submission_reposted(subieddit, reddit_id):

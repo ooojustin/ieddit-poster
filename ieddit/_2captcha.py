@@ -15,11 +15,13 @@ class _2Captcha:
         params["id"] = request_id
 
         response = requests.post(self.api_url + "res.php", params)
-        assert response.status_code == 200, "unexpected status code checking 2captcha request [{}] => {}".format(response.status_code, response.text)
+        if response.status_code != 200:
+            raise Exception("unexpected status code checking 2captcha request [{}]".format(response.status_code))
 
         data = json.loads(response.text)
         valid = data.get("status") == 1 or data.get("request") == "CAPCHA_NOT_READY"
-        assert valid, "captcha unsolved:\n" + json.dumps(data, indent = 4)
+        if not valid:
+            raise Exception("captcha unsolved:\n" + json.dumps(data, indent = 4))
 
         return data["request"] if data["status"] == 1 else None
 
@@ -30,11 +32,13 @@ class _2Captcha:
         params["body"] = img
 
         response = requests.post(self.api_url + "in.php", params)
-        assert response.status_code == 200, "unexpected status code creating 2captcha request [{}] => {}".format(response.status_code, response.text)
+        if response.status_code != 200:
+            raise Exception("unexpected status code creating 2captcha request [{}]".format(response.status_code))
 
         data = json.loads(response.text)
         valid = data.get("status") == 1 and "request" in data.keys()
-        assert valid, "failed to create 2captcha request:\n" + json.dumps(data, indent = 4)
+        if not valid:
+            raise Exception("failed to create 2captcha request:\n" + json.dumps(data, indent = 4))
 
         return data["request"]
     
