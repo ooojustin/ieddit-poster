@@ -11,4 +11,6 @@ REDDIT = {
     "USER_AGENT": ""
 }
 
+SUB_MAP = { }
+
 _2CAPTCHA_API_KEY = ""

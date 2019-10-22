@@ -12,7 +12,6 @@ def table_exists(name):
     cursor.execute("SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = ?", (name,))
     return cursor.fetchone()[0] > 0
 
-
 def init():
 
     if not table_exists("posts"):
@@ -25,5 +24,6 @@ def init():
                 "reddit_url"	TEXT,
                 "ieddit_sub"	TEXT,
                 "reddit_sub"	TEXT,
+                "image_url"     TEXT,
                 "timestamp"	INTEGER
             );""")
