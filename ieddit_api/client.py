@@ -41,7 +41,7 @@ class Client:
         self.logged_in = True
 
     @_require_login
-    def create_post(self, title, sub, url = "", text = ""):
+    def create_post(self, title, sub, url = "", text = "", nsfw = False):
 
         # send get request and create html parser
         response = self.session.get(Client.IEDDIT("/create_post"))
@@ -67,4 +67,7 @@ class Client:
         assert match, "failed to create post: [{}] => {}".format(response.status_code, response.text)
         post_id = int(match.groups(1))
         
+        if nsfw:
+            self.session.post(Client.IEDDIT("/nsfw"), { "post_id": post_id })
+
         return post_id
