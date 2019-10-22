@@ -8,7 +8,7 @@ class Client:
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0"
     IEDDIT = lambda e: urljoin("https://ieddit.com/", e)
 
-    def __init__(self, username, password, _2captcha_api_key):
+    def __init__(self, username, password, _2captcha_api_key, do_login = True):
 
         self.username = username
         self.password = password
@@ -18,6 +18,9 @@ class Client:
 
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": Client.USER_AGENT})
+
+        if do_login:
+            self.login()
 
     def _require_login(func):
         def wrapper(self, *args, **kwargs):
@@ -74,4 +77,4 @@ class Client:
             params = { "post_id": post_id }
             self.session.post(Client.IEDDIT("/user/nsfw"), params)
             
-        return post_url
+        return post_id, post_url
