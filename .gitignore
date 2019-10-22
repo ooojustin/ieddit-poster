@@ -127,3 +127,6 @@ dmypy.json
 
 # project settings file
 settings.py
+
+# sqlite database file
+database.db

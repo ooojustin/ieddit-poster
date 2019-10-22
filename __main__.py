@@ -1,6 +1,9 @@
 from settings import IEDDIT, REDDIT
 import settings, praw, ieddit
 
+import database
+database.init()
+
 reddit = praw.Reddit(
     client_id = REDDIT["CLIENT_ID"],
     client_secret = REDDIT["CLIENT_SECRET"],
