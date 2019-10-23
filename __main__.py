@@ -1,5 +1,6 @@
 from settings import IEDDIT, REDDIT
 import settings, praw, ieddit, time
+from traceback import print_tb
 
 import database
 database.init()
@@ -36,23 +37,24 @@ while True:
                 
                 # post it on ieddit
                 try:
-                    post = {
+                    post_data = {
                         "title": submission.title + " [r-poster]",
                         "sub": subieddit,
                         "url": submission.url,
                         # "nsfw": submission.over_18
                         # NOTE: https://i.imgur.com/H91GFk8.png
                     }
-                    post_id, post_url = ieddit.create_post(**post)
+                    post = ieddit.create_post(**post_data)
                 except Exception as e:
                     print(e)
+                    print_tb(e.__traceback__)
                     continue
 
                 # store in database
                 database.add_post([
                     submission.title, 
-                    post_id, submission.id, 
-                    post_url, 
+                    post.id, submission.id, 
+                    post.full_url, 
                     "https://reddit.com" + submission.permalink, 
                     subieddit, 
                     subreddit.display_name, 
