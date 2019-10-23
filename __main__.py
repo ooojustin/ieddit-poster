@@ -60,4 +60,4 @@ while True:
                     int(time.time())
                 ])
 
-                time.sleep(5)
+                time.sleep(settings.POST_DELAY)
