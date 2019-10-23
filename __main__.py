@@ -59,3 +59,5 @@ while True:
                     submission.url, 
                     int(time.time())
                 ])
+
+                time.sleep(5)
