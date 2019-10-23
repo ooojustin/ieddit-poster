@@ -40,7 +40,8 @@ while True:
                         "title": submission.title + " [r-poster]",
                         "sub": subieddit,
                         "url": submission.url,
-                        "nsfw": True # submission.over_18
+                        # "nsfw": submission.over_18
+                        # NOTE: https://i.imgur.com/H91GFk8.png
                     }
                     post_id, post_url = ieddit.create_post(**post)
                 except Exception as e:
