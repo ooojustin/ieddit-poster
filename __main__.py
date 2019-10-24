@@ -16,8 +16,7 @@ reddit = praw.Reddit(
 
 ieddit = ieddit.Client(
     username = IEDDIT["USERNAME"],
-    password = IEDDIT["PASSWORD"], 
-    _2captcha_api_key = settings._2CAPTCHA_API_KEY
+    api_key = IEDDIT["API_KEY"]
 )
 
 while True:
@@ -41,8 +40,6 @@ while True:
                         "title": submission.title + " [r-poster]",
                         "sub": subieddit,
                         "url": submission.url,
-                        # "nsfw": submission.over_18
-                        # NOTE: https://i.imgur.com/H91GFk8.png
                     }
                     post = ieddit.create_post(**post_data)
                 except Exception as e:
@@ -54,7 +51,7 @@ while True:
                 database.add_post([
                     submission.title, 
                     post.id, submission.id, 
-                    post.full_url, 
+                    post.permalink, 
                     "https://reddit.com" + submission.permalink, 
                     subieddit, 
                     subreddit.display_name, 

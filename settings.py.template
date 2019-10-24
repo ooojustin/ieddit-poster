@@ -1,6 +1,6 @@
 IEDDIT = {
     "USERNAME": "",
-    "PASSWORD": ""
+    "API_KEY": ""
 }
 
 REDDIT = {
@@ -12,8 +12,6 @@ REDDIT = {
 }
 
 SUB_MAP = { }
-
-_2CAPTCHA_API_KEY = ""
 
 POST_DELAY = 30
 
